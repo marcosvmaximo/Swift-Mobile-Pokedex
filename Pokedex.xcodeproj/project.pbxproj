@@ -29,9 +29,22 @@
 		AF61EA0B2DE6A2BE00EA2398 /* PokedexUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokedexUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AFFE60122DFA73BB00CB09F0 /* Exceptions for "Pokedex" folder in "Pokedex" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Views/Untitled.swift,
+			);
+			target = AF61E9F02DE6A2BC00EA2398 /* Pokedex */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AF61E9F32DE6A2BC00EA2398 /* Pokedex */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AFFE60122DFA73BB00CB09F0 /* Exceptions for "Pokedex" folder in "Pokedex" target */,
+			);
 			path = Pokedex;
 			sourceTree = "<group>";
 		};
@@ -177,6 +190,9 @@
 			);
 			mainGroup = AF61E9E82DE6A2BC00EA2398;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AFFE600D2DFA6ECA00CB09F0 /* XCRemoteSwiftPackageReference "InjectionIII" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AF61E9F22DE6A2BC00EA2398 /* Products */;
 			projectDirPath = "";
@@ -308,6 +324,10 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-interposable",
+				);
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -364,6 +384,10 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-interposable",
+				);
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -534,6 +558,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AFFE600D2DFA6ECA00CB09F0 /* XCRemoteSwiftPackageReference "InjectionIII" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/johnno1962/InjectionIII";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = AF61E9E92DE6A2BC00EA2398 /* Project object */;
 }

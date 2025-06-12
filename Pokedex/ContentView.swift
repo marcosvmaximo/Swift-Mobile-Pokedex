@@ -1,66 +1,55 @@
-//
-//  ContentView.swift
-//  Pokedex
-//
-//  Created by Marcos Máximo on 27/05/25.
-//
+// Swift-Mobile-Pokedex/Pokedex/ContentView.swift
 
 import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = PokemonViewModel()
 
+    private let gridItems = [GridItem(.flexible()), GridItem(.flexible())]
+
     var body: some View {
         NavigationView {
             ZStack {
-                Color.red
-                    .ignoresSafeArea()
+                PokeballBackgroundView()
 
-                VStack {
-                    // Detalhe Pokedex
-                    HStack(spacing: 12) {
-                        Circle()
-                            .fill(Color.black)
-                            .frame(width: 60, height: 60)
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: 40, height: 40)
-                    }
-                    Spacer()
-
-                    // Campo de busca ligado ao ViewModel
-                    TextField("Digite o nome do Pokémon", text: $viewModel.searchText)
-                        .padding(22)
-                        .background(Color.white)
-                        .cornerRadius(25)
-                        .frame(maxWidth: 330)
-
-                    // Resultados
-                    if !viewModel.pokemons.isEmpty {
-                        List(viewModel.pokemons) { pokemon in
-                            PokemonRow(pokemon: pokemon)
-                        }
-                        .listStyle(.plain)
-                        .background(Color.white)
-                        .frame(maxHeight: 400)
-                        .frame(maxWidth: 330)
-                        .cornerRadius(25)
-                    }
-
-                    Spacer()
-                }
-                .padding()
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
+                VStack(alignment: .leading, spacing: 20) {
                     Text("Pokedex")
-                        .font(.system(size: 52, weight: .bold))
-                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.horizontal)
+                        .padding(.top)
+                    
+                    PokedexSearchBar(text: $viewModel.searchText)
+                        .padding(.horizontal)
+
+                    ScrollView {
+                        LazyVGrid(columns: gridItems, spacing: 16) {
+                            ForEach(viewModel.pokemons) { pokemon in
+                                NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
+                                    PokemonCardView(pokemon: pokemon)
+                                        .onAppear {
+                                            // AQUI ESTÁ A MUDANÇA CRUCIAL
+                                            // Só busca o próximo lote se não estivermos pesquisando
+                                            // e se o Pokémon atual for o último da lista
+                                            if !viewModel.isSearching && pokemon.id == viewModel.pokemons.last?.id {
+                                                print("Chegou ao final da lista, buscando mais Pokémon...")
+                                                viewModel.fetchNextBatchOfPokemons()
+                                            }
+                                        }
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .padding()
+                    }
                 }
             }
+            .navigationBarHidden(true)
             .onAppear {
-                viewModel.fetchRandomPokemons()
+                // Busca o lote inicial de Pokémon se a lista estiver vazia
+                if viewModel.pokemons.isEmpty {
+                    viewModel.fetchNextBatchOfPokemons()
+                }
             }
         }
     }
