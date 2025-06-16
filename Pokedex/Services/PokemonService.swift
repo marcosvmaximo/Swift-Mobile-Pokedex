@@ -1,7 +1,9 @@
+// Em Pokedex/Services/PokemonService.swift
+// VERSÃO CORRIGIDA
+
 import Foundation
 import Combine
 
-// Adicionado: Structs para decodificar a lista de Pokémon da API
 struct PokemonListResponse: Decodable {
     let results: [PokemonListItem]
 }
@@ -14,8 +16,7 @@ struct PokemonListItem: Decodable {
 final class PokemonService {
     static let shared = PokemonService()
     private let baseURL = URL(string: "https://pokeapi.co/api/v2/pokemon")!
-
-    // NOVO: Função para buscar a lista de Pokémon com paginação
+    
     func fetchPokemonList(limit: Int, offset: Int) -> AnyPublisher<[PokemonListItem], Error> {
         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)!
         components.queryItems = [
@@ -23,7 +24,9 @@ final class PokemonService {
             URLQueryItem(name: "offset", value: "\(offset)")
         ]
         
-        let url = components.url!
+        guard let url = components.url else {
+            return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
+        }
         
         return URLSession.shared.dataTaskPublisher(for: url)
             .map(\.data)
@@ -32,33 +35,31 @@ final class PokemonService {
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
-
-    // Função existente para buscar os detalhes de um único Pokémon
+    
     func fetchPokemon(name: String) -> AnyPublisher<PokemonModel, Error> {
         let url = baseURL.appendingPathComponent(name.lowercased())
+        
         return URLSession.shared.dataTaskPublisher(for: url)
             .map(\.data)
             .decode(type: PokemonDetail.self, decoder: JSONDecoder())
-            .map { detail in
-                // Mapeia os tipos
+            .tryMap { detail in
                 let types = detail.types
-                    .sorted { $0.slot < $1.slot }
+                    .sorted(by: { $0.slot < $1.slot })
                     .map { $0.type.name.capitalized }
                 
-                // Mapeia a URL da imagem
-                let imageURL = detail.sprites.frontDefault
-                    .flatMap(URL.init(string:))
+                // --- PONTO CHAVE DA CORREÇÃO ---
+                // Agora, tentamos pegar a imagem de alta qualidade primeiro.
+                // Se não existir, usamos a imagem pixelada como backup.
+                let imageURLString = detail.sprites.other?.officialArtwork.frontDefault ?? detail.sprites.frontDefault ?? ""
+                let imageURL = URL(string: imageURLString)
                 
-                // Mapeia as estatísticas
                 let stats = detail.stats.map {
-                    PokemonModel.Stat(name: $0.stat.name.capitalized, value: $0.baseStat)
+                    PokemonModel.Stat(name: $0.stat.name, value: $0.baseStat)
                 }
                 
-                // Converte altura (de decímetros para metros) e peso (de hectogramas para kg)
                 let heightInMeters = Double(detail.height) / 10.0
                 let weightInKg = Double(detail.weight) / 10.0
-
-                // Cria o modelo final para a View
+                
                 return PokemonModel(
                     id: detail.id,
                     name: detail.name.capitalized,

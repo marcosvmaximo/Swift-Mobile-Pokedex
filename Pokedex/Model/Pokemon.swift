@@ -1,3 +1,6 @@
+// Em Pokedex/Model/Pokemon.swift
+// VERSÃO CORRIGIDA
+
 import Foundation
 
 // A estrutura principal não muda
@@ -11,11 +14,10 @@ struct PokemonModel: Identifiable, Decodable {
     let stats: [Stat]
 
     struct Stat: Identifiable, Decodable {
-        var id = UUID() // Para conformar com Identifiable
+        var id = UUID()
         let name: String
         let value: Int
         
-        // NOVO: Propriedade computada para abreviar o nome da estatística
         var abbreviatedName: String {
             let lowercasedName = name.lowercased()
             switch lowercasedName {
@@ -42,19 +44,42 @@ struct PokemonModel: Identifiable, Decodable {
     }
 }
 
-// ... (O restante do arquivo, como PokemonDetail, continua o mesmo)
+
+// --- PONTO CHAVE DA CORREÇÃO ---
+// As structs abaixo foram atualizadas para acessar a imagem de alta qualidade.
+
 struct PokemonDetail: Decodable {
     let id: Int
     let name: String
     let height: Int
     let weight: Int
     let types: [TypeElement]
-    let sprites: Sprites
+    let sprites: Sprites // A estrutura de Sprites agora é mais complexa
     let stats: [StatElement]
 }
 
-struct Sprites: Decodable {
+// NOVO: Struct para decodificar o campo "official-artwork"
+struct OfficialArtwork: Decodable {
     let frontDefault: String?
+
+    enum CodingKeys: String, CodingKey {
+        case frontDefault = "front_default"
+    }
+}
+
+// NOVO: Struct para decodificar o campo "other"
+struct OtherSprites: Decodable {
+    let officialArtwork: OfficialArtwork
+
+    enum CodingKeys: String, CodingKey {
+        case officialArtwork = "official-artwork"
+    }
+}
+
+// ATUALIZADO: A struct Sprites agora contém a "other" para acessar a imagem de alta qualidade
+struct Sprites: Decodable {
+    let frontDefault: String? // Mantido como fallback (backup)
+    let other: OtherSprites?
 }
 
 struct StatElement: Decodable {

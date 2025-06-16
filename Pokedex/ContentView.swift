@@ -1,60 +1,115 @@
-// Swift-Mobile-Pokedex/Pokedex/ContentView.swift
+// Em Pokedex/ContentView.swift
+// VERSÃO CORRIGIDA E DEFINITIVA
 
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var viewModel = PokemonViewModel()
-
-    private let gridItems = [GridItem(.flexible()), GridItem(.flexible())]
-
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     var body: some View {
-        NavigationView {
-            ZStack {
-                PokeballBackgroundView()
-
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("Pokedex")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.horizontal)
-                        .padding(.top)
-                    
-                    PokedexSearchBar(text: $viewModel.searchText)
-                        .padding(.horizontal)
-
-                    ScrollView {
-                        LazyVGrid(columns: gridItems, spacing: 16) {
-                            ForEach(viewModel.pokemons) { pokemon in
-                                NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
-                                    PokemonCardView(pokemon: pokemon)
-                                        .onAppear {
-                                            // AQUI ESTÁ A MUDANÇA CRUCIAL
-                                            // Só busca o próximo lote se não estivermos pesquisando
-                                            // e se o Pokémon atual for o último da lista
-                                            if !viewModel.isSearching && pokemon.id == viewModel.pokemons.last?.id {
-                                                print("Chegou ao final da lista, buscando mais Pokémon...")
-                                                viewModel.fetchNextBatchOfPokemons()
-                                            }
-                                        }
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                            }
+        if let usuario = authViewModel.usuarioLogado {
+            NavigationView {
+                TabView {
+                    PokedexPrincipalView()
+                        .tabItem {
+                            Label("Pokedex", systemImage: "list.bullet")
                         }
-                        .padding()
+                    
+                    FavoritosView(usuario: usuario)
+                        .tabItem {
+                            Label("Favoritos", systemImage: "star.fill")
+                        }
+                }
+                .navigationTitle("Pokedex")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            authViewModel.logout()
+                        }) {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                        }
+                        .foregroundColor(.red)
                     }
                 }
             }
-            .navigationBarHidden(true)
-            .onAppear {
-                // Busca o lote inicial de Pokémon se a lista estiver vazia
-                if viewModel.pokemons.isEmpty {
-                    viewModel.fetchNextBatchOfPokemons()
+            .environmentObject(authViewModel)
+        } else {
+            LoginView()
+                .environmentObject(authViewModel)
+        }
+    }
+}
+
+
+// --- PONTO CHAVE DA CORREÇÃO FINAL ---
+struct PokedexPrincipalView: View {
+    @StateObject private var viewModel = PokemonViewModel()
+    private let gridItems = [GridItem(.flexible()), GridItem(.flexible())]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            PokedexSearchBar(text: $viewModel.searchText)
+                .padding()
+
+            if viewModel.isLoading && viewModel.pokemons.isEmpty {
+                Spacer()
+                ProgressView("Carregando...")
+                Spacer()
+            } else if let errorMessage = viewModel.errorMessage {
+                Spacer()
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+                    .multilineTextAlignment(.center)
+                Spacer()
+            } else {
+                // A ScrollView agora corta seu conteúdo para evitar vazamento de sombras.
+                ScrollView {
+                    LazyVGrid(columns: gridItems, spacing: 16) {
+                        ForEach(viewModel.pokemons) { pokemon in
+                            NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
+                                PokemonCardView(pokemon: pokemon)
+                                    .onAppear {
+                                        if !viewModel.isSearching && pokemon.id == viewModel.pokemons.last?.id {
+                                            viewModel.fetchNextBatchOfPokemons()
+                                        }
+                                    }
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                    }
+                    // O padding agora é mais explícito para garantir espaço no final.
+                    .padding(.horizontal)
+                    .padding(.bottom, 16) // Espaçamento inferior para a grade.
+                    
+                    if viewModel.isLoading && !viewModel.pokemons.isEmpty {
+                        ProgressView()
+                            .padding(.vertical, 20) // Espaçamento para o loader no final.
+                    }
                 }
+                .clipped() // 1. ESTA É A CORREÇÃO PRINCIPAL para o problema visual.
+            }
+        }
+        .background(PokeballBackgroundView())
+        .onAppear {
+            if viewModel.pokemons.isEmpty {
+                viewModel.fetchNextBatchOfPokemons()
             }
         }
     }
 }
 
+
 #Preview {
-    ContentView()
+    let authViewModel = AuthViewModel()
+    let context = CoreDataManager.shared.container.viewContext
+    let previewUser = Usuario(context: context)
+    previewUser.id = UUID()
+    previewUser.email = "preview@user.com"
+    authViewModel.usuarioLogado = previewUser
+    
+    return ContentView()
+        .environmentObject(authViewModel)
+        .environment(\.managedObjectContext, context)
 }

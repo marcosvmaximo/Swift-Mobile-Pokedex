@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AFCD72252DFFD2BC00999531 /* Pokedex.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AFCD72232DFFD2BC00999531 /* Pokedex.xcdatamodeld */; };
+		AFCD72622DFFEEAD00999531 /* Usuario+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCD72602DFFEEAD00999531 /* Usuario+CoreDataClass.swift */; };
+		AFCD72632DFFEEAD00999531 /* Usuario+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCD72612DFFEEAD00999531 /* Usuario+CoreDataProperties.swift */; };
+		AFCD72642DFFEEAD00999531 /* PokemonFavorito+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCD725E2DFFEEAD00999531 /* PokemonFavorito+CoreDataClass.swift */; };
+		AFCD72652DFFEEAD00999531 /* PokemonFavorito+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCD725F2DFFEEAD00999531 /* PokemonFavorito+CoreDataProperties.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		AF61EA022DE6A2BE00EA2398 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,24 +35,16 @@
 		AF61E9F12DE6A2BC00EA2398 /* Pokedex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pokedex.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF61EA012DE6A2BE00EA2398 /* PokedexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokedexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF61EA0B2DE6A2BE00EA2398 /* PokedexUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokedexUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AFCD72242DFFD2BC00999531 /* Pokedex.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Pokedex.xcdatamodel; sourceTree = "<group>"; };
+		AFCD725E2DFFEEAD00999531 /* PokemonFavorito+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "PokemonFavorito+CoreDataClass.swift"; path = "Pokedex/Model/PokemonFavorito+CoreDataClass.swift"; sourceTree = "<group>"; };
+		AFCD725F2DFFEEAD00999531 /* PokemonFavorito+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "PokemonFavorito+CoreDataProperties.swift"; path = "Pokedex/Model/PokemonFavorito+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		AFCD72602DFFEEAD00999531 /* Usuario+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Usuario+CoreDataClass.swift"; path = "Pokedex/Model/Usuario+CoreDataClass.swift"; sourceTree = "<group>"; };
+		AFCD72612DFFEEAD00999531 /* Usuario+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Usuario+CoreDataProperties.swift"; path = "Pokedex/Model/Usuario+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		AFFE60122DFA73BB00CB09F0 /* Exceptions for "Pokedex" folder in "Pokedex" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Views/Untitled.swift,
-			);
-			target = AF61E9F02DE6A2BC00EA2398 /* Pokedex */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AF61E9F32DE6A2BC00EA2398 /* Pokedex */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				AFFE60122DFA73BB00CB09F0 /* Exceptions for "Pokedex" folder in "Pokedex" target */,
-			);
 			path = Pokedex;
 			sourceTree = "<group>";
 		};
@@ -78,6 +78,11 @@
 		AF61E9E82DE6A2BC00EA2398 = {
 			isa = PBXGroup;
 			children = (
+				AFCD725E2DFFEEAD00999531 /* PokemonFavorito+CoreDataClass.swift */,
+				AFCD725F2DFFEEAD00999531 /* PokemonFavorito+CoreDataProperties.swift */,
+				AFCD72602DFFEEAD00999531 /* Usuario+CoreDataClass.swift */,
+				AFCD72612DFFEEAD00999531 /* Usuario+CoreDataProperties.swift */,
+				AFCD72232DFFD2BC00999531 /* Pokedex.xcdatamodeld */,
 				AF61E9F32DE6A2BC00EA2398 /* Pokedex */,
 				AF61E9F22DE6A2BC00EA2398 /* Products */,
 			);
@@ -234,6 +239,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFCD72622DFFEEAD00999531 /* Usuario+CoreDataClass.swift in Sources */,
+				AFCD72632DFFEEAD00999531 /* Usuario+CoreDataProperties.swift in Sources */,
+				AFCD72642DFFEEAD00999531 /* PokemonFavorito+CoreDataClass.swift in Sources */,
+				AFCD72652DFFEEAD00999531 /* PokemonFavorito+CoreDataProperties.swift in Sources */,
+				AFCD72252DFFD2BC00999531 /* Pokedex.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -569,6 +579,19 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCVersionGroup section */
+		AFCD72232DFFD2BC00999531 /* Pokedex.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				AFCD72242DFFD2BC00999531 /* Pokedex.xcdatamodel */,
+			);
+			currentVersion = AFCD72242DFFD2BC00999531 /* Pokedex.xcdatamodel */;
+			path = Pokedex.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = AF61E9E92DE6A2BC00EA2398 /* Project object */;
 }
