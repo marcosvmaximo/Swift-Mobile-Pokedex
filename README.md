@@ -1,5 +1,12 @@
 # Pokédex App - iOS com SwiftUI
 
+Vinicius Viana
+Vinicius da Costa
+Marcos Vinicius
+
+## Video
+[https://youtube.com/shorts/MLk-SzcYqKg]
+
 ## 1\. Descrição Geral
 
 Este é um aplicativo de Pokédex para iOS, desenvolvido de forma nativa com SwiftUI. Ele permite que os usuários explorem o mundo dos Pokémon de uma maneira simples e funcional.
