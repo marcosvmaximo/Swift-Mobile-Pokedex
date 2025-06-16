@@ -89,22 +89,15 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    // Em AuthViewModel.swift
-
-    // ... (resto do código do ViewModel)
-
     func ehFavorito(pokemon: PokemonModel) -> Bool {
         guard let usuario = self.usuarioLogado else {
             return false
         }
         
-        // A forma mais eficiente de verificar é com um predicado,
-        // evitando carregar todos os favoritos na memória para iterar.
         let request: NSFetchRequest<PokemonFavorito> = PokemonFavorito.fetchRequest()
         request.predicate = NSPredicate(format: "pokemonID == %d AND usuario == %@", pokemon.id, usuario)
         
         do {
-            // Se a contagem for maior que 0, o favorito existe.
             let count = try context.count(for: request)
             return count > 0
         } catch {
@@ -121,29 +114,19 @@ class AuthViewModel: ObservableObject {
 
         do {
             if let favoritoExistente = try context.fetch(request).first {
-                // Pokémon já é favorito, então o removemos.
-                // A deleção do objeto cuidará de remover a relação.
                 context.delete(favoritoExistente)
             } else {
-                // Pokémon não é favorito, então o adicionamos.
                 let novoFavorito = PokemonFavorito(context: context)
                 novoFavorito.pokemonID = Int64(pokemon.id)
                 novoFavorito.nome = pokemon.name
                 novoFavorito.imagemUrl = pokemon.imageURL?.absoluteString
                 novoFavorito.tipos = pokemon.types.joined(separator: ",")
                 
-                // --- CORREÇÃO DEFINITIVA ---
-                // Estabelecemos a relação a partir do objeto 'PokemonFavorito'.
-                // Esta é a forma padrão e segura. O Core Data atualizará
-                // o conjunto 'favoritos' do usuário automaticamente.
                 novoFavorito.usuario = usuario
             }
             
-            // Salvar o contexto persiste a adição ou remoção.
             CoreDataManager.shared.save()
             
-            // Notifica as views que observam este ViewModel diretamente (como a estrela na PokemonDetailView).
-            // A FavoritosView se atualizará automaticamente por causa do @FetchRequest.
             self.objectWillChange.send()
 
         } catch {

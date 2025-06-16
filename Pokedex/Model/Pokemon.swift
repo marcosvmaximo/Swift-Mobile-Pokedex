@@ -1,9 +1,5 @@
-// Em Pokedex/Model/Pokemon.swift
-// VERSÃO CORRIGIDA
-
 import Foundation
 
-// A estrutura principal não muda
 struct PokemonModel: Identifiable, Decodable {
     let id: Int
     let name: String
@@ -44,21 +40,16 @@ struct PokemonModel: Identifiable, Decodable {
     }
 }
 
-
-// --- PONTO CHAVE DA CORREÇÃO ---
-// As structs abaixo foram atualizadas para acessar a imagem de alta qualidade.
-
 struct PokemonDetail: Decodable {
     let id: Int
     let name: String
     let height: Int
     let weight: Int
     let types: [TypeElement]
-    let sprites: Sprites // A estrutura de Sprites agora é mais complexa
+    let sprites: Sprites
     let stats: [StatElement]
 }
 
-// NOVO: Struct para decodificar o campo "official-artwork"
 struct OfficialArtwork: Decodable {
     let frontDefault: String?
 
@@ -67,7 +58,6 @@ struct OfficialArtwork: Decodable {
     }
 }
 
-// NOVO: Struct para decodificar o campo "other"
 struct OtherSprites: Decodable {
     let officialArtwork: OfficialArtwork
 
@@ -76,10 +66,17 @@ struct OtherSprites: Decodable {
     }
 }
 
-// ATUALIZADO: A struct Sprites agora contém a "other" para acessar a imagem de alta qualidade
+// --- PONTO CHAVE DA CORREÇÃO ---
 struct Sprites: Decodable {
-    let frontDefault: String? // Mantido como fallback (backup)
+    let frontDefault: String?
     let other: OtherSprites?
+
+    // Este enum foi adicionado para garantir que o Swift decodifique
+    // corretamente o campo "front_default" da API.
+    enum CodingKeys: String, CodingKey {
+        case frontDefault = "front_default"
+        case other
+    }
 }
 
 struct StatElement: Decodable {

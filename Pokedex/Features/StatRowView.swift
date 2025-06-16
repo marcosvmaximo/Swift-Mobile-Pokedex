@@ -4,33 +4,24 @@ struct StatRowView: View {
     let stat: PokemonModel.Stat
     let barColor: Color
     
-    // O valor máximo para uma estatística de Pokémon geralmente é 255.
-    // Isso nos ajuda a calcular a proporção da barra de progresso.
     private let maxStatValue: Double = 255.0
 
     var body: some View {
-        HStack(spacing: 8) {
-            // Nome da estatística abreviado
+        HStack(spacing: DesignSystem.Spacing.small.rawValue) {
             Text(stat.abbreviatedName)
-                .font(.system(.body, design: .monospaced))
-                .fontWeight(.bold)
+                .font(DesignSystem.AppFont.statName)
                 .frame(width: 70, alignment: .leading)
 
-            // Valor numérico da estatística
             Text("\(stat.value)")
-                .font(.body)
-                .fontWeight(.medium)
+                .font(DesignSystem.AppFont.statValue)
                 .frame(width: 40, alignment: .leading)
             
-            // Barra de Progresso
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
-                    // Fundo da barra
                     Capsule()
                         .frame(width: geometry.size.width, height: 12)
                         .foregroundColor(.gray.opacity(0.2))
                     
-                    // Barra de progresso preenchida
                     Capsule()
                         .frame(width: calculateBarWidth(totalWidth: geometry.size.width), height: 12)
                         .foregroundColor(barColor)
@@ -45,11 +36,4 @@ struct StatRowView: View {
         let percentage = CGFloat(stat.value) / CGFloat(maxStatValue)
         return totalWidth * percentage
     }
-}
-
-#Preview {
-    // Exemplo para o Preview
-    let sampleStat = PokemonModel.Stat(name: "special-attack", value: 120)
-    return StatRowView(stat: sampleStat, barColor: .red)
-        .padding()
 }

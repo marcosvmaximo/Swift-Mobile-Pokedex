@@ -5,9 +5,7 @@ struct PokemonCardView: View {
 
     var body: some View {
         VStack {
-            // --- ÁREA DA IMAGEM ATUALIZADA ---
             Group {
-                // Primeiro, verificamos se a URL existe
                 if let url = pokemon.imageURL {
                     AsyncImage(url: url) { phase in
                         switch phase {
@@ -15,55 +13,51 @@ struct PokemonCardView: View {
                             image.resizable()
                                  .aspectRatio(contentMode: .fit)
                         case .failure(_):
-                            // A URL existe, mas o download falhou
                             Image(systemName: "wifi.exclamationmark")
                                 .font(.largeTitle)
-                                .foregroundColor(.gray)
+                                .foregroundColor(DesignSystem.AppColor.secondary)
                         case .empty:
-                            // Carregando a imagem
                             ProgressView()
                         @unknown default:
                             EmptyView()
                         }
                     }
                 } else {
-                    // A API não forneceu uma URL para a imagem
                     Image(systemName: "photo.on.rectangle.angled")
                         .font(.largeTitle)
-                        .foregroundColor(.gray)
+                        .foregroundColor(DesignSystem.AppColor.secondary)
                 }
             }
             .frame(width: 120, height: 120)
 
-            // Informações do Pokémon
-            VStack(spacing: 8) {
+            VStack(spacing: DesignSystem.Spacing.small.rawValue) {
                 Text("#\(pokemon.id) \(pokemon.name)")
-                    .font(.headline)
-                    .foregroundColor(.primary)
+                    .font(DesignSystem.AppFont.headline)
+                    .foregroundColor(DesignSystem.AppColor.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
-                HStack(spacing: 4) {
+                HStack(spacing: DesignSystem.Spacing.xsmall.rawValue) {
                     ForEach(pokemon.types, id: \.self) { typeName in
                         Text(typeName)
-                            .font(.caption)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(TypeColor.color(for: typeName))
+                            .font(DesignSystem.AppFont.caption)
+                            .foregroundColor(DesignSystem.AppColor.onPrimary)
+                            .padding(.horizontal, DesignSystem.Spacing.small.rawValue)
+                            .padding(.vertical, DesignSystem.Spacing.xsmall.rawValue)
+                            .background(DesignSystem.AppColor.PokemonType.color(for: typeName))
                             .clipShape(Capsule())
                     }
                 }
                 .frame(height: 20)
             }
-            .padding(.horizontal, 10)
+            .padding(.horizontal, DesignSystem.Spacing.small.rawValue)
             
             Spacer()
         }
         .padding(.vertical)
         .frame(width: 170, height: 200)
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
+        .background(DesignSystem.AppColor.background)
+        .cornerRadius(DesignSystem.CornerRadius.medium.rawValue)
         .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 2)
     }
 }

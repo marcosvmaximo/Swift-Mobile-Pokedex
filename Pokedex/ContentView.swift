@@ -1,6 +1,3 @@
-// Em Pokedex/ContentView.swift
-// VERSÃO CORRIGIDA E DEFINITIVA
-
 import SwiftUI
 
 struct ContentView: View {
@@ -29,7 +26,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "rectangle.portrait.and.arrow.right")
                         }
-                        .foregroundColor(.red)
+                        .foregroundColor(DesignSystem.AppColor.primary)
                     }
                 }
             }
@@ -41,8 +38,6 @@ struct ContentView: View {
     }
 }
 
-
-// --- PONTO CHAVE DA CORREÇÃO FINAL ---
 struct PokedexPrincipalView: View {
     @StateObject private var viewModel = PokemonViewModel()
     private let gridItems = [GridItem(.flexible()), GridItem(.flexible())]
@@ -59,14 +54,13 @@ struct PokedexPrincipalView: View {
             } else if let errorMessage = viewModel.errorMessage {
                 Spacer()
                 Text(errorMessage)
-                    .foregroundColor(.red)
+                    .foregroundColor(DesignSystem.AppColor.primary)
                     .padding()
                     .multilineTextAlignment(.center)
                 Spacer()
             } else {
-                // A ScrollView agora corta seu conteúdo para evitar vazamento de sombras.
                 ScrollView {
-                    LazyVGrid(columns: gridItems, spacing: 16) {
+                    LazyVGrid(columns: gridItems, spacing: DesignSystem.Spacing.medium.rawValue) {
                         ForEach(viewModel.pokemons) { pokemon in
                             NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
                                 PokemonCardView(pokemon: pokemon)
@@ -79,16 +73,15 @@ struct PokedexPrincipalView: View {
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
-                    // O padding agora é mais explícito para garantir espaço no final.
                     .padding(.horizontal)
-                    .padding(.bottom, 16) // Espaçamento inferior para a grade.
+                    .padding(.bottom, DesignSystem.Spacing.medium.rawValue)
                     
                     if viewModel.isLoading && !viewModel.pokemons.isEmpty {
                         ProgressView()
-                            .padding(.vertical, 20) // Espaçamento para o loader no final.
+                            .padding(.vertical, DesignSystem.Spacing.large.rawValue)
                     }
                 }
-                .clipped() // 1. ESTA É A CORREÇÃO PRINCIPAL para o problema visual.
+                .clipped()
             }
         }
         .background(PokeballBackgroundView())
@@ -98,18 +91,4 @@ struct PokedexPrincipalView: View {
             }
         }
     }
-}
-
-
-#Preview {
-    let authViewModel = AuthViewModel()
-    let context = CoreDataManager.shared.container.viewContext
-    let previewUser = Usuario(context: context)
-    previewUser.id = UUID()
-    previewUser.email = "preview@user.com"
-    authViewModel.usuarioLogado = previewUser
-    
-    return ContentView()
-        .environmentObject(authViewModel)
-        .environment(\.managedObjectContext, context)
 }

@@ -1,6 +1,5 @@
 import SwiftUI
 
-// Utilitário para obter uma cor baseada no tipo do Pokémon
 struct TypeColor {
     static func color(for type: String) -> Color {
         switch type.lowercased() {

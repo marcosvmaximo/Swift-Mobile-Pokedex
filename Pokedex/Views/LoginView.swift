@@ -1,5 +1,3 @@
-// Em Pokedex/Views/LoginView.swift
-
 import SwiftUI
 
 struct LoginView: View {
@@ -9,36 +7,42 @@ struct LoginView: View {
     @State private var mostrarCadastro = false
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: DesignSystem.Spacing.large.rawValue) {
             Text("Bem-vindo à Pokedex")
-                .font(.largeTitle).fontWeight(.bold)
+                .font(DesignSystem.AppFont.largeTitle)
             
             TextField("E-mail", text: $email)
                 .keyboardType(.emailAddress)
                 .autocapitalization(.none)
                 .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
+                .background(DesignSystem.AppColor.surface)
+                .cornerRadius(DesignSystem.CornerRadius.small.rawValue)
             
             SecureField("Senha", text: $senha)
                 .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
+                .background(DesignSystem.AppColor.surface)
+                .cornerRadius(DesignSystem.CornerRadius.small.rawValue)
             
             if let erro = authViewModel.erroAuth {
-                Text(erro).foregroundColor(.red).font(.caption)
+                Text(erro)
+                    .foregroundColor(DesignSystem.AppColor.primary)
+                    .font(DesignSystem.AppFont.caption)
             }
             
             Button("Login") {
                 authViewModel.login(email: email, senha: senha)
             }
-            .padding().frame(maxWidth: .infinity).background(Color.red).foregroundColor(.white).cornerRadius(10)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(DesignSystem.AppColor.primary)
+            .foregroundColor(DesignSystem.AppColor.onPrimary)
+            .cornerRadius(DesignSystem.CornerRadius.small.rawValue)
             
             Button("Não tem uma conta? Cadastre-se") {
-                authViewModel.erroAuth = nil // Limpa erros antigos antes de abrir a tela de cadastro
+                authViewModel.erroAuth = nil
                 mostrarCadastro = true
             }
-            .font(.footnote)
+            .font(DesignSystem.AppFont.footnote)
         }
         .padding()
         .sheet(isPresented: $mostrarCadastro) {
