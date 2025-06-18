@@ -1,7 +1,9 @@
 # Pokédex App - iOS com SwiftUI
 
 Vinicius Viana
-Vinicius da Costa
+<br>
+Vinicius Costa
+<br>
 Marcos Vinicius
 
 ## Video
